@@ -21,7 +21,6 @@
 	<modules>
 		<module>core</module>
 		<module>email-sender</module>
-		<module>discovery</module>
 	</modules>
 
 	<dependencies>
