@@ -1,17 +1,11 @@
 spring:
   application:
     name: email-sender
-  mail:
+  mail: 
     host: smtp.gmail.com
     port: 587
-    username: naudodev@gmail.com
-    password: 
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+    username: noreply.projeto.cinema@gmail.com
+    password: ukjavlfaiswsikss
 
 server:
   port: 8822

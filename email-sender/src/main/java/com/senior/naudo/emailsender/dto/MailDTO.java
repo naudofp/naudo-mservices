@@ -1,8 +1,8 @@
-package com.senior.naudo.emailsender.model;
+package com.senior.naudo.emailsender.dto;
 
 import java.util.UUID;
 
-public class EmailModule {
+public class MailDTO {
 
 	private UUID id;
 	private String addressee;
@@ -11,7 +11,9 @@ public class EmailModule {
 	private String from;
 	private String passwordUser;
 	
-	public EmailModule(UUID id, String addressee, String subject, String from,String body, String passwordUser) {
+	public MailDTO() {}
+	
+	public MailDTO(UUID id, String addressee, String subject, String body, String from, String passwordUser) {
 		this.id = id;
 		this.addressee = addressee;
 		this.subject = subject;
@@ -56,4 +58,5 @@ public class EmailModule {
 	public void setPasswordUser(String passwordUser) {
 		this.passwordUser = passwordUser;
 	}
+	
 }

@@ -8,5 +8,4 @@ public class EmailSenderApplication {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(EmailSenderApplication.class, args);
 	}
-
 }
