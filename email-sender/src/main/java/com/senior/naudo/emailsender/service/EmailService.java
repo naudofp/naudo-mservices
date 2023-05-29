@@ -1,23 +1,26 @@
 package com.senior.naudo.emailsender.service;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import com.senior.naudo.emailsender.exception.MailFailedException;
 import com.senior.naudo.emailsender.model.EmailModule;
@@ -52,16 +55,24 @@ public class EmailService {
 		session.setDebug(true);
 
 		try {
+			MimeBodyPart partText = new MimeBodyPart();
+			MimeBodyPart part = new MimeBodyPart();
+			Multipart multipart = new MimeMultipart();
+
+			DataHandler source = new DataHandler(new FileDataSource(resource.getFile()));
+			part.setDataHandler(source);
+			partText.setContent(mail.getBody() + "<br><br>", "text/html");
+			
+			
+			multipart.addBodyPart(partText, 0);
+			multipart.addBodyPart(part, 1);
+			
 			MimeMessage message = new MimeMessage(session);
 			Address[] toUser = InternetAddress.parse(mail.getAddressee());
-			String body = mail.getBody();
-			byte[] bytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-
 			message.setFrom(new InternetAddress(user));
 			message.setRecipients(Message.RecipientType.TO, toUser);
 			message.setSubject(mail.getSubject());
-			message.setContent(body + "\n\n" + new String(bytes, StandardCharsets.UTF_8), "text/html; charset=utf-8");
-
+			message.setContent(multipart);
 			
 			Transport.send(message);
 
