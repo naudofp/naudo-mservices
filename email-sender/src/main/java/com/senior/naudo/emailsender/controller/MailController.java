@@ -1,5 +1,7 @@
 package com.senior.naudo.emailsender.controller;
 
+import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,8 +21,7 @@ public class MailController {
 	}
 
 	@GetMapping("/green")
-	public ResponseEntity<String> teste(@RequestBody EmailModule dto) {
-		System.out.println(dto.getAddressee());
+	public ResponseEntity<String> teste(@RequestBody EmailModule dto) throws IOException {
 		service.sendEmail(dto);
 		return ResponseEntity.status(HttpStatus.OK).body("Email sended successfully");
 	}

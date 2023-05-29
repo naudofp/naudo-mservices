@@ -1,0 +1,8 @@
+com\senior\naudo\emailsender\model\EmailModule.class
+com\senior\naudo\emailsender\error\ErrorResponse.class
+com\senior\naudo\emailsender\service\EmailService.class
+com\senior\naudo\emailsender\EmailSenderApplication.class
+com\senior\naudo\emailsender\exception\MailFailedException.class
+com\senior\naudo\emailsender\error\CustomControllerAdvice.class
+com\senior\naudo\emailsender\controller\MailController.class
+com\senior\naudo\emailsender\dto\MailDTO.class

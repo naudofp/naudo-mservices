@@ -2,24 +2,27 @@ package com.senior.naudo.emailsender.dto;
 
 import java.util.UUID;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 public class MailDTO {
 
 	private UUID id;
-	private String addressee;
+	@NotBlank
+	private String toUser;
+	@NotNull
 	private String subject;
+	@NotEmpty
 	private String body;
-	private String from;
-	private String passwordUser;
 	
 	public MailDTO() {}
 	
-	public MailDTO(UUID id, String addressee, String subject, String body, String from, String passwordUser) {
+	public MailDTO(UUID id, String toUser, String subject, String body) {
 		this.id = id;
-		this.addressee = addressee;
+		this.toUser = toUser;
 		this.subject = subject;
 		this.body = body;
-		this.from = from;
-		this.passwordUser = passwordUser;
 	}
 	
 	public UUID getId() {
@@ -28,11 +31,11 @@ public class MailDTO {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-	public String getAddressee() {
-		return addressee;
+	public String getToUser() {
+		return toUser;
 	}
-	public void setAddressee(String addressee) {
-		this.addressee = addressee;
+	public void setToUser(String toUser) {
+		this.toUser = toUser;
 	}
 	public String getSubject() {
 		return subject;
@@ -46,17 +49,4 @@ public class MailDTO {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public String getFrom() {
-		return from;
-	}
-	public void setFrom(String from) {
-		this.from = from;
-	}
-	public String getPasswordUser() {
-		return passwordUser;
-	}
-	public void setPasswordUser(String passwordUser) {
-		this.passwordUser = passwordUser;
-	}
-	
 }

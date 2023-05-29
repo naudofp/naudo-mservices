@@ -2,22 +2,25 @@ package com.senior.naudo.emailsender.model;
 
 import java.util.UUID;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class EmailModule {
 
 	private UUID id;
-	private String addressee;
+	@NotNull
 	private String subject;
 	private String body;
-	private String from;
-	private String passwordUser;
+	@NotBlank
+	@Email
+	private String addressee;
 	
-	public EmailModule(UUID id, String addressee, String subject, String from,String body, String passwordUser) {
+	public EmailModule(UUID id, String subject, String from, String body) {
 		this.id = id;
-		this.addressee = addressee;
 		this.subject = subject;
 		this.body = body;
-		this.from = from;
-		this.passwordUser = passwordUser;
+		this.addressee = from;
 	}
 	
 	public UUID getId() {
@@ -25,12 +28,6 @@ public class EmailModule {
 	}
 	public void setId(UUID id) {
 		this.id = id;
-	}
-	public String getAddressee() {
-		return addressee;
-	}
-	public void setAddressee(String addressee) {
-		this.addressee = addressee;
 	}
 	public String getSubject() {
 		return subject;
@@ -44,16 +41,10 @@ public class EmailModule {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public String getFrom() {
-		return from;
+	public String getAddressee() {
+		return addressee;
 	}
-	public void setFrom(String from) {
-		this.from = from;
-	}
-	public String getPasswordUser() {
-		return passwordUser;
-	}
-	public void setPasswordUser(String passwordUser) {
-		this.passwordUser = passwordUser;
+	public void setAddressee(String from) {
+		this.addressee = from;
 	}
 }
