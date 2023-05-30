@@ -2,11 +2,13 @@ package com.senior.naudo.emailsender.dto;
 
 import java.util.UUID;
 
+import com.senior.naudo.emailsender.model.EmailModule;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public class MailDTO {
+public class EmailDTO {
 
 	private UUID id;
 	@NotBlank
@@ -16,13 +18,21 @@ public class MailDTO {
 	@NotEmpty
 	private String body;
 	
-	public MailDTO() {}
+	public EmailDTO() {}
 	
-	public MailDTO(UUID id, String toUser, String subject, String body) {
+	public EmailDTO(UUID id, String toUser, String subject, String body) {
 		this.id = id;
 		this.toUser = toUser;
 		this.subject = subject;
 		this.body = body;
+	}
+	
+	public EmailDTO(EmailModule entity){
+		this(entity.getId(), entity.getSubject(), entity.getBody(), entity.getAddressee());
+	}
+
+	public EmailModule dtoToEntity(EmailDTO dto) {
+		return new EmailModule(this.id, this.subject, this.body, this.toUser);
 	}
 	
 	public UUID getId() {

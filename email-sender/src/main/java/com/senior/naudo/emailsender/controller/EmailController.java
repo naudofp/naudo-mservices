@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.senior.naudo.emailsender.model.EmailModule;
-import com.senior.naudo.emailsender.service.EmailService;
+import com.senior.naudo.emailsender.service.EmailSenderService;
 
 @Controller
-public class MailController {
+public class EmailController {
 
-	private EmailService service;
+	private EmailSenderService service;
 
-	public MailController(EmailService service) {
+	public EmailController(EmailSenderService service) {
 		this.service = service;
 	}
 

@@ -26,46 +26,30 @@ import com.senior.naudo.emailsender.exception.MailFailedException;
 import com.senior.naudo.emailsender.model.EmailModule;
 
 @Service
-public class EmailService {
+public class EmailSenderService {
 
-	Properties props = new Properties();
-
+	Properties props;
 	@Value("${naudo.config.username}")
 	String user;
 	@Value("${naudo.config.password}")
 	String password;
-
 	@Value("classpath:templates/signature.html")
 	Resource resource;
+	
+	public EmailSenderService() {
+		this.props = new Properties();
+	}
 
 	public void sendEmail(EmailModule mail) throws IOException{
-
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
-
-		Session session = Session.getDefaultInstance(props, new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, password);
-			}
-		});
-
-		session.setDebug(true);
+		Session session = initialzrSession();
 
 		try {
 			MimeBodyPart partText = new MimeBodyPart();
-			MimeBodyPart part = new MimeBodyPart();
 			Multipart multipart = new MimeMultipart();
 
-			DataHandler source = new DataHandler(new FileDataSource(resource.getFile()));
-			part.setDataHandler(source);
 			partText.setContent(mail.getBody() + "<br><br>", "text/html");
-			
-			
 			multipart.addBodyPart(partText, 0);
-			multipart.addBodyPart(part, 1);
+			multipart = addSignature(multipart);
 			
 			MimeMessage message = new MimeMessage(session);
 			Address[] toUser = InternetAddress.parse(mail.getAddressee());
@@ -79,5 +63,36 @@ public class EmailService {
 		} catch (MessagingException e) {
 			throw new MailFailedException(e.getMessage());
 		}
+	}
+	
+	public Multipart addSignature(Multipart multipart) throws IOException {
+		MimeBodyPart part = new MimeBodyPart();
+		
+		try {
+			DataHandler source = new DataHandler(new FileDataSource(resource.getFile()));
+			part.setDataHandler(source);
+			multipart.addBodyPart(part);
+		} catch (MessagingException e) {
+			throw new MailFailedException("Failed while implemented signature");
+		}
+		
+		return multipart;
+	}
+	
+	public Session initialzrSession() {
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", "465");
+
+		Session session = Session.getDefaultInstance(props, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		});
+		
+		session.setDebug(true);
+		return session;
 	}
 }
