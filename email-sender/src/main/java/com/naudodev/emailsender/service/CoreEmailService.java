@@ -35,6 +35,8 @@ public class CoreEmailService {
 		return session;
 	}
 	
+//	Adição da assinatura utilizada nos envios de mensagens sem o destinatário, logo,
+//	enviadas por 'noreplay.naudo@gmail.com'
 	public static Multipart addSignature(Multipart multipart, Resource resource) throws IOException {
 
 		MimeBodyPart part = new MimeBodyPart();

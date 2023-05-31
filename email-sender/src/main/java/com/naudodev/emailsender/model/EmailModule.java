@@ -24,18 +24,30 @@ public class EmailModule {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id_mail")
 	private UUID id;
+//	Titulo/Assunto da mensagem.
 	@NotNull
 	@Column(name = "subject_mail", length = Length.DEFAULT, nullable = false)
 	private String subject;
+//	Corpo/Conteúdo da mensagem.
 	@Column(name = "body_mail", length = Length.LONG32, nullable = false)
 	private String body;
+//	Neste campo é informado o destinatário. Pode ser enviado para qualquer endereço
+//	de e-mail.
 	@NotBlank
 	@Email
 	@Column(name = "addressee_mail", length = Length.DEFAULT, nullable = false)
 	private String addressee;
+//	Neste campo é informado o endereço do remetente. Quando utilizado o envio de email padrão, não é 
+//	necessário o preenchimento no JSON. Caso o e-mail não esteja autorizado, você pode criar chaves de acesso.
+//	Saiba mais na documentação do serviço localizado em:
+//	https://github.com/naudofp/naudo-mservices/tree/emailsender - documentation.pdf
 	@Email
 	@Column(name = "from_mail", length = Length.DEFAULT, nullable = false)
 	private String from;
+//	Neste campo é informado a chave de acesso criada nas senhas de app. Quando utilizado é obrigatório informar o
+//	remetente. Caso o e-mail não esteja autorizado, você pode criar chaves de acesso.
+//	Saiba mais na documentação do serviço localizado em:
+//	https://github.com/naudofp/naudo-mservices/tree/emailsender - documentation.pdf
 	@Transient
 	private String wordAccess;
 	

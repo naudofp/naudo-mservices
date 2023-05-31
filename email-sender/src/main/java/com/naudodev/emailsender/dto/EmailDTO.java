@@ -1,5 +1,7 @@
 package com.naudodev.emailsender.dto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.naudodev.emailsender.model.EmailModule;
@@ -40,6 +42,12 @@ public class EmailDTO {
 
 	public EmailModule dtoToEntity(EmailDTO dto) {
 		return new EmailModule(this.id, this.subject, this.body, this.addressee, this.from, this.wordAccess);
+	}
+	
+	public static List<EmailDTO> parseListDto(List<EmailModule> emails){
+		List<EmailDTO> dtos = new ArrayList<>();
+		emails.forEach(mail -> dtos.add(new EmailDTO(mail)));
+		return dtos;
 	}
 	
 	public UUID getId() {

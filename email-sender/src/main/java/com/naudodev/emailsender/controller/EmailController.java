@@ -1,16 +1,20 @@
 package com.naudodev.emailsender.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.naudodev.emailsender.dto.EmailDTO;
+import com.naudodev.emailsender.service.EmailDataService;
 import com.naudodev.emailsender.service.EmailSenderService;
 
 @Controller()
@@ -18,24 +22,39 @@ import com.naudodev.emailsender.service.EmailSenderService;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class EmailController {
 
-	private EmailSenderService service;
+	private EmailSenderService sender;
+	private EmailDataService data;
 
-	public EmailController(EmailSenderService service) {
-		this.service = service;
-	}
-
-//	This method will send e-mail with the sender set to 
-//	"noreplay.naudo@gmail.com" by default. Learn more -> com.senior.naudo
-	
-	@GetMapping("/default")
-	public ResponseEntity<String> sendEmailWithDefaultMail(@RequestBody EmailDTO dto) throws IOException {
-		service.sendEmailDefault(dto);
-		return ResponseEntity.status(HttpStatus.OK).body("Email sended successfully");
+	public EmailController(EmailSenderService service, EmailDataService data) {
+		this.sender = service;
+		this.data = data;
 	}
 	
-	@GetMapping("")
+	@PostMapping("")
 	public ResponseEntity<String> sendEmailwithOtherMailAuthorized(@RequestBody EmailDTO dto) {
-		service.sendEmailWithOtherUserSender(dto);
+		sender.sendEmailWithOtherUserSender(dto);
 		return ResponseEntity.status(HttpStatus.OK).body("Email sended successfully");
 	}
+
+	@PostMapping("/default")
+	public ResponseEntity<String> sendEmailWithDefaultMail(@RequestBody EmailDTO dto) throws IOException {
+		sender.sendEmailDefault(dto);
+		return ResponseEntity.status(HttpStatus.OK).body("Email sended successfully");
+	}
+
+	@GetMapping("/get")
+	public ResponseEntity<List<EmailDTO>> findAll() {
+		return ResponseEntity.status(HttpStatus.OK).body(data.getAllMails());
+	}
+	
+	@GetMapping("/get/by/addressee/{mail}")
+	public ResponseEntity<List<EmailDTO>> findAllByAddressee(@PathVariable String mail) {
+		return ResponseEntity.status(HttpStatus.OK).body(data.getMailsWhereAddresseeContainsEmail(mail));
+	}
+	
+	@GetMapping("/get/by/from/{mail}")
+	public ResponseEntity<List<EmailDTO>> findAllByFrom(@PathVariable String mail) {
+		return ResponseEntity.status(HttpStatus.OK).body(data.getMailsWhereFromContainsEmail(mail));
+	}
+	
 }
