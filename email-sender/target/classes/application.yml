@@ -12,7 +12,7 @@ spring:
 naudo:
   config:
     username: noreply.naudo@gmail.com
-    password: cocjtlhdnioifbqs
+    passcode: cocjtlhdnioifbqs
 
 server:
   port: 8822
