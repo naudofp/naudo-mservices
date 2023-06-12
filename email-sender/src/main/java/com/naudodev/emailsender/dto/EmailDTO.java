@@ -1,11 +1,13 @@
 package com.naudodev.emailsender.dto;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.naudodev.emailsender.model.EmailModule;
 
+import com.naudodev.emailsender.projection.EmailProjection;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,33 +23,47 @@ public class EmailDTO {
 	private String subject;
 	@NotEmpty
 	private String body;
-	@Email
-	private String from;
-	private String wordAccess;
-	
+	@NotBlank
+	private String owner;
+	private LocalDateTime dateSent;
+
 	public EmailDTO() {}
 	
-	public EmailDTO(UUID id, String addressee, String subject, String body, String from, String wordAccess) {
+	public EmailDTO(UUID id, String subject, String body,  String addressee, String owner, LocalDateTime dateSent) {
 		this.id = id;
 		this.addressee = addressee;
 		this.subject = subject;
 		this.body = body;
-		this.from = from;
-		this.wordAccess = wordAccess;
-	}
-	
-	public EmailDTO(EmailModule entity){
-		this(entity.getId(), entity.getSubject(), entity.getBody(), entity.getAddressee(), entity.getFrom(), entity.getWordAccess());
+		this.owner = owner;
+		this.dateSent = dateSent;
 	}
 
-	public EmailModule dtoToEntity(EmailDTO dto) {
-		return new EmailModule(this.id, this.subject, this.body, this.addressee, this.from, this.wordAccess);
+	public EmailDTO(UUID id, String subject, String body,  String addressee, String owner) {
+		this(id, subject, body, addressee, owner, LocalDateTime.now());
+	}
+
+	public EmailDTO(EmailModule entity){
+		this(entity.getId(), entity.getSubject(),entity.getBody(), entity.getAddressee(), entity.getOwner(), entity.getDateSent());
+	}
+
+	public EmailDTO(EmailProjection mail){
+		this(mail.getId(), mail.getSubject(),mail.getBody(), mail.getAddressee(), mail.getOwner(), mail.getDateSent());
+	}
+
+	public EmailModule dtoToEntity() {
+		return new EmailModule(this.id, this.subject, this.body, this.addressee, this.owner, this.dateSent);
 	}
 	
+	public static List<EmailDTO> parseProjectionListDto(List<EmailProjection> emails){
+		return emails.stream().map(EmailDTO::new).collect(Collectors.toList());
+	}
+	
+	public static List<EmailModule> parseProjectionListModule(List<EmailProjection> emails){
+		return emails.stream().map(x -> new EmailModule(x.getId(), x.getSubject(), x.getBody(), x.getAddressee(), x.getOwner())).collect(Collectors.toList());
+	}
+
 	public static List<EmailDTO> parseListDto(List<EmailModule> emails){
-		List<EmailDTO> dtos = new ArrayList<>();
-		emails.forEach(mail -> dtos.add(new EmailDTO(mail)));
-		return dtos;
+		return emails.stream().map(EmailDTO::new).collect(Collectors.toList());
 	}
 	
 	public UUID getId() {
@@ -74,16 +90,16 @@ public class EmailDTO {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public String getFrom() {
-		return from;
+	public String getOwner() {
+		return owner;
 	}
-	public void setFrom(String from) {
-		this.from = from;
+	public LocalDateTime getDateSent() {
+		return dateSent;
 	}
-	public String getWordAccess() {
-		return wordAccess;
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
-	public void setWordAccess(String wordAccess) {
-		this.wordAccess = wordAccess;
+	public void setDateSent(LocalDateTime dateSent) {
+		this.dateSent = dateSent;
 	}
 }

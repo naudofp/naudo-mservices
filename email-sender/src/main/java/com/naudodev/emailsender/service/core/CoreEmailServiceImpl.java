@@ -1,4 +1,4 @@
-package com.naudodev.emailsender.service;
+package com.naudodev.emailsender.service.core;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -16,7 +16,7 @@ import org.springframework.core.io.Resource;
 
 import com.naudodev.emailsender.exception.MailFailedException;
 
-public class CoreEmailService {
+public class CoreEmailServiceImpl {
 	
 	public static Session initialzrSession(Properties props, String user, String password) {
 		props.put("mail.smtp.host", "smtp.gmail.com");

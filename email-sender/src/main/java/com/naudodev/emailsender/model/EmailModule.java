@@ -1,20 +1,14 @@
 package com.naudodev.emailsender.model;
 
-import java.util.Objects;
-import java.util.UUID;
-
-import org.hibernate.Length;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.Length;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tb_mail")
@@ -37,38 +31,30 @@ public class EmailModule {
 	@Email
 	@Column(name = "addressee_mail", length = Length.DEFAULT, nullable = false)
 	private String addressee;
-//	Neste campo é informado o endereço do remetente. Quando utilizado o envio de email padrão, não é 
-//	necessário o preenchimento no JSON. Caso o e-mail não esteja autorizado, você pode criar chaves de acesso.
-//	Saiba mais na documentação do serviço localizado em:
-//	https://github.com/naudofp/naudo-mservices/tree/emailsender - documentation.pdf
-	@Email
-	@Column(name = "from_mail", length = Length.DEFAULT, nullable = false)
-	private String from;
-//	Neste campo é informado a chave de acesso criada nas senhas de app. Quando utilizado é obrigatório informar o
-//	remetente. Caso o e-mail não esteja autorizado, você pode criar chaves de acesso.
-//	Saiba mais na documentação do serviço localizado em:
-//	https://github.com/naudofp/naudo-mservices/tree/emailsender - documentation.pdf
-	@Transient
-	private String wordAccess;
-	
-	public EmailModule(UUID id, @NotNull String subject, String body, @NotBlank @Email String addressee, @Email String from, String wordAccess) {
+	@NotBlank
+	@Column(name = "owner_mail", length = Length.LONG, nullable = false)
+	private String owner;
+	@Column(name = "datesent_mail")
+	private LocalDateTime dateSent;
+
+	public EmailModule(UUID id, @NotNull String subject, String body, @NotBlank @Email String addressee, @NotBlank String owner, LocalDateTime dateSent) {
 		this.id = id;
 		this.subject = subject;
 		this.body = body;
 		this.addressee = addressee;
-		this.from = from;
-		this.wordAccess = wordAccess;
+		this.owner = owner;
+		this.dateSent = dateSent;
 	}
-	
-	public EmailModule(UUID id, @NotNull String subject, String body, @NotBlank @Email String addressee, @Email String from) {
-		this(id, subject, body, addressee, from, null);
+
+	public EmailModule(UUID id, @NotNull String subject, String body, @NotBlank @Email String addressee, @NotBlank String owner) {
+		this(id,subject, body, addressee, owner, LocalDateTime.now());
 	}
-	
+
 	protected EmailModule() {}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(addressee, body, from, id, subject, wordAccess);
+		return Objects.hash(addressee, id, owner, subject);
 	}
 
 	@Override
@@ -80,45 +66,55 @@ public class EmailModule {
 		if (getClass() != obj.getClass())
 			return false;
 		EmailModule other = (EmailModule) obj;
-		return Objects.equals(addressee, other.addressee) && Objects.equals(body, other.body)
-				&& Objects.equals(from, other.from) && Objects.equals(id, other.id)
-				&& Objects.equals(subject, other.subject) && Objects.equals(wordAccess, other.wordAccess);
+		return Objects.equals(addressee, other.addressee) && Objects.equals(id, other.id)
+				&& Objects.equals(owner, other.owner) && Objects.equals(subject, other.subject);
 	}
 
-	public String getFrom() {
-		return from;
-	}
-	public void setFrom(String from) {
-		this.from = from;
-	}
 	public UUID getId() {
 		return id;
 	}
+
 	public void setId(UUID id) {
 		this.id = id;
 	}
+
 	public String getSubject() {
 		return subject;
 	}
+
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+
 	public String getBody() {
 		return body;
 	}
+
 	public void setBody(String body) {
 		this.body = body;
 	}
+
 	public String getAddressee() {
 		return addressee;
 	}
+
 	public void setAddressee(String addressee) {
 		this.addressee = addressee;
 	}
-	public String getWordAccess() {
-		return wordAccess;
+
+	public String getOwner() {
+		return owner;
 	}
-	public void setWordAccess(String wordAccess) {
-		this.wordAccess = wordAccess;
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public LocalDateTime getDateSent() {
+		return dateSent;
+	}
+
+	public void setDateSent(LocalDateTime dateSent) {
+		this.dateSent = dateSent;
 	}
 }
